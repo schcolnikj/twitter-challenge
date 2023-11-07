@@ -93,6 +93,8 @@ const httpRequestService = {
       return res.data;
     }
   },
+
+  // ACOMODAR REACTIONS
   createReaction: async (postId: string, reaction: string) => {
     const res = await axios.post(
       `${url}/reaction/${postId}`,
@@ -119,7 +121,7 @@ const httpRequestService = {
   },
   followUser: async (userId: string) => {
     const res = await axios.post(
-      `${url}/follow/${userId}`,
+      `${url}/follower/follow/${userId}`,
       {},
       {
         headers: {
@@ -132,7 +134,7 @@ const httpRequestService = {
     }
   },
   unfollowUser: async (userId: string) => {
-    const res = await axios.delete(`${url}/follow/${userId}`, {
+    const res = await axios.delete(`${url}/follower/unfollow/${userId}`, {
       headers: {
         Authorization: localStorage.getItem("token"),
       },
@@ -145,7 +147,7 @@ const httpRequestService = {
     try {
       const cancelToken = axios.CancelToken.source();
 
-      const response = await axios.get(`${url}/user/search`, {
+      const response = await axios.get(`${url}/user/by_username/${username}`, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
