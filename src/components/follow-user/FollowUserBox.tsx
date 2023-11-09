@@ -7,6 +7,8 @@ import { ButtonType } from "../button/StyledButton";
 import { useAppSelector } from "../../redux/hooks";
 import "./FollowUserBox.css";
 
+
+
 interface FollowUserBoxProps {
   profilePicture?: string;
   name?: string;
@@ -23,7 +25,8 @@ const FollowUserBox = ({
   const user = useAppSelector((state) => state.user.user);
   const service = useHttpRequestService();
   const { t } = useTranslation();
-
+  console.log(user);
+  
   const [isFollowing, setIsFollowing] = useState(
     user.following.some((f) => f.id === id)
   );
