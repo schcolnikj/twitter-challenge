@@ -8,7 +8,7 @@ import { useHttpRequestService } from "../../../service/HttpRequestService";
 import LabeledInput from "../../../components/labeled-input/LabeledInput";
 import Button from "../../../components/button/Button";
 import { ButtonType } from "../../../components/button/StyledButton";
-import { StyledH3 } from "../../../components/common/text";
+import { StyledH3, StyledP } from "../../../components/common/text";
 
 interface SignUpData {
   name: string;
@@ -19,7 +19,13 @@ interface SignUpData {
 }
 const SignUpPage = () => {
   const [data, setData] = useState<Partial<SignUpData>>({});
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<SignUpData>({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
@@ -34,7 +40,16 @@ const SignUpPage = () => {
     httpRequestService
       .signUp(requestData)
       .then(() => navigate("/"))
-      .catch(() => setError(false));
+      .catch((e) => {
+        if (e.response.status === 409) {
+          
+          setError({
+            ...error,
+            email: "Please check your email, it may be already in use!",
+            username: "Please check your username, it may be already in use!",
+          })
+        }
+      });
   };
 
   return (
@@ -50,29 +65,28 @@ const SignUpPage = () => {
               required
               placeholder={"Enter name..."}
               title={t("input-params.name")}
-              error={error}
               onChange={handleChange("name")}
             />
+            {error.name.length ? <span>{error.name}</span> : null}
             <LabeledInput
               required
               placeholder={"Enter username..."}
               title={t("input-params.username")}
-              error={error}
               onChange={handleChange("username")}
             />
+            {error.username.length ? <span>{error.username}</span> : null}            
             <LabeledInput
               required
               placeholder={"Enter email..."}
               title={t("input-params.email")}
-              error={error}
               onChange={handleChange("email")}
             />
+            {error.email.length ? <span>{error.email}</span> : null}
             <LabeledInput
               type="password"
               required
               placeholder={"Enter password..."}
               title={t("input-params.password")}
-              error={error}
               onChange={handleChange("password")}
             />
             <LabeledInput
@@ -80,9 +94,9 @@ const SignUpPage = () => {
               required
               placeholder={"Confirm password..."}
               title={t("input-params.confirm-password")}
-              error={error}
               onChange={handleChange("confirmPassword")}
             />
+            
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Button
