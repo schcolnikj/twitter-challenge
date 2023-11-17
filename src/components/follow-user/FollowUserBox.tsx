@@ -5,7 +5,8 @@ import UserDataBox from "../user-data-box/UserDataBox";
 import { useTranslation } from "react-i18next";
 import { ButtonType } from "../button/StyledButton";
 import { useAppSelector } from "../../redux/hooks";
-import "./FollowUserBox.css";
+import { User } from "../../service";
+import { StyledFollowUserBox } from "./FollowUserBoxContainer";
 
 
 
@@ -28,7 +29,7 @@ const FollowUserBox = ({
   console.log(user);
   
   const [isFollowing, setIsFollowing] = useState(
-    user.following.some((f) => f.id === id)
+    user.following.some((f: User) => f.id === id)
   );
 
   const handleFollow = async () => {
@@ -41,7 +42,7 @@ const FollowUserBox = ({
   };
 
   return (
-    <div className="box-container">
+    <StyledFollowUserBox>
       <UserDataBox
         id={id}
         name={name!}
@@ -54,7 +55,7 @@ const FollowUserBox = ({
         size={"SMALL"}
         onClick={handleFollow}
       />
-    </div>
+    </StyledFollowUserBox>
   );
 };
 
