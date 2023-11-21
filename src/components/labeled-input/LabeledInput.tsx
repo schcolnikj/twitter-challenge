@@ -4,11 +4,14 @@ import { StyledInputTitle } from "./InputTitle";
 import { StyledInputElement } from "./StyledInputElement";
 
 interface InputWithLabelProps {
-  type?: "password" | "text";
+  type?: "password" | "text" | "email";
+  id?: string;
+  name?: string;
   title: string;
   placeholder: string;
   required: boolean;
   error?: boolean;
+  value?: string | number | boolean;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -18,6 +21,7 @@ const LabeledInput = ({
   required,
   error,
   onChange,
+  id,
   type = "text",
 }: InputWithLabelProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);

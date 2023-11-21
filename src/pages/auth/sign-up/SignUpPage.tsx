@@ -1,5 +1,4 @@
-import type { ChangeEvent } from "react";
-import React, { useState } from "react";
+import { useState } from "react";
 import logo from "../../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -8,7 +7,9 @@ import { useHttpRequestService } from "../../../service/HttpRequestService";
 import LabeledInput from "../../../components/labeled-input/LabeledInput";
 import Button from "../../../components/button/Button";
 import { ButtonType } from "../../../components/button/StyledButton";
-import { StyledH3, StyledP } from "../../../components/common/text";
+import { StyledH3 } from "../../../components/common/text";
+import { useFormik } from "formik";
+import { signUpSchema } from "../../../schemas";
 
 interface SignUpData {
   name: string;
@@ -18,7 +19,6 @@ interface SignUpData {
   confirmPassword: string;
 }
 const SignUpPage = () => {
-  const [data, setData] = useState<Partial<SignUpData>>({});
   const [error, setError] = useState<SignUpData>({
     name: "",
     username: "",
@@ -30,28 +30,38 @@ const SignUpPage = () => {
   const httpRequestService = useHttpRequestService();
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const handleChange =
-    (prop: string) => (event: ChangeEvent<HTMLInputElement>) => {
-      setData({ ...data, [prop]: event.target.value });
+  
+    const onSubmit = async (values: SignUpData) => {
+      const data = {email: values.email, username: values.username, name: values.name, password: values.password};
+      httpRequestService
+        .signUp(data)
+        .then(() => navigate("/"))
+        .catch((e) => {
+          if (e.response.status === 409) {
+            
+            setError({
+              ...error,
+              email: "Please check your email, it may be already in use!",
+              username: "Please check your username, it may be already in use!",
+            })
+          }
+        });
     };
-  const handleSubmit = async () => {
-    const { confirmPassword, ...requestData } = data;
-    httpRequestService
-      .signUp(requestData)
-      .then(() => navigate("/"))
-      .catch((e) => {
-        if (e.response.status === 409) {
-          
-          setError({
-            ...error,
-            email: "Please check your email, it may be already in use!",
-            username: "Please check your username, it may be already in use!",
-          })
-        }
-      });
-  };
+    
 
+  const {values, errors, touched, handleChange, handleSubmit, handleBlur} = useFormik({
+    initialValues: {
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    onSubmit: onSubmit, 
+    validationSchema: signUpSchema,
+  })
+
+ 
   return (
     <AuthWrapper>
       <div className={"border"}>
@@ -60,50 +70,70 @@ const SignUpPage = () => {
             <img src={logo} alt="Twitter Logo" />
             <StyledH3>{t("title.register")}</StyledH3>
           </div>
-          <div className={"input-container"}>
+          <form onSubmit={handleSubmit} className={"input-container"}>
             <LabeledInput
               required
               placeholder={"Enter name..."}
               title={t("input-params.name")}
+              name="name"
+              id="name"
               onChange={handleChange("name")}
+              value={values.name}
             />
-            {error.name.length ? <span>{error.name}</span> : null}
+            {errors.name && <span>{errors.name}</span>}
             <LabeledInput
               required
               placeholder={"Enter username..."}
               title={t("input-params.username")}
+              name="username"
+              id="name"
               onChange={handleChange("username")}
+              value={values.username}
             />
-            {error.username.length ? <span>{error.username}</span> : null}            
+            {errors.username && touched && <span>{errors.username}</span>}
+            
             <LabeledInput
               required
               placeholder={"Enter email..."}
               title={t("input-params.email")}
+              name="email"
+              id="email"
               onChange={handleChange("email")}
+              value={values.email}
             />
-            {error.email.length ? <span>{error.email}</span> : null}
+            {errors.email && <span>{errors.email}</span>}
+
             <LabeledInput
               type="password"
               required
               placeholder={"Enter password..."}
               title={t("input-params.password")}
+              name="password"
+              id="password"
               onChange={handleChange("password")}
+              value={values.password}
             />
+            {errors.password && <span>{errors.password}</span>}
+
             <LabeledInput
               type="password"
               required
               placeholder={"Confirm password..."}
               title={t("input-params.confirm-password")}
+              name="confirmPassword"
+              id="confirmPassword"
               onChange={handleChange("confirmPassword")}
+              value={values.confirmPassword}
             />
+            {errors.confirmPassword && <span>{errors.confirmPassword}</span>}
             
-          </div>
+          </form>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Button
               text={t("buttons.register")}
               buttonType={ButtonType.FOLLOW}
               size={"MEDIUM"}
-              onClick={handleSubmit}
+              onClick={() => handleSubmit()}
             />
             <Button
               text={t("buttons.login")}
