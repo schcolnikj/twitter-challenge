@@ -17,14 +17,12 @@ const HomePage = () => {
   const handleSetUser = async () => {
     try {
       const user = await service.me();
-      const data = await service.getPosts(query);
-      dispatch(setUser(user));
-      dispatch(updateFeed(data));
+      dispatch(setUser(user.user));
     } catch (e) {
       navigate("/sign-in");
     }
   };
-
+  
   useEffect(() => {
     handleSetUser().then();
   }, []);
