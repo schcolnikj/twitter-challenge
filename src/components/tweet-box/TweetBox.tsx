@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useState } from "react";
+import React, { ForwardedRef, ReactEventHandler, useRef, useState } from "react";
 import Button from "../button/Button";
 import TweetInput from "../tweet-input/TweetInput";
 import { useHttpRequestService } from "../../service/HttpRequestService";
@@ -13,29 +13,31 @@ import { StyledContainer } from "../common/Container";
 import { StyledButtonContainer } from "./ButtonContainer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 
 interface TweetBoxProps {
-  parentId: string;
-  close: () => void;
-  mobile: boolean;
+  parentId?: string;
+  close?: () => void;
+  mobile?: boolean;
 }
 
-const TweetBox = (props: TweetBoxProps) => {
+const TweetBox = React.forwardRef<HTMLDivElement, TweetBoxProps>((props: TweetBoxProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { parentId, close, mobile } = props;
   const [content, setContent] = useState("");
   const [images, setImages] = useState <File[]>([]);
   const [imagesPreview, setImagesPreview] = useState <string[]>([]);
-
+  
   const { user, length, query } = useSelector((state: RootState) => state.user);
   const httpService = useHttpRequestService();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
   const handleSubmit = async () => {
     try {
+      const post = await httpService.createPost({content});
       setContent("");
       setImages([]);
       setImagesPreview([]);
@@ -45,6 +47,9 @@ const TweetBox = (props: TweetBoxProps) => {
       close && close();
     } catch (e) {
       console.log(e);
+      setContent("");
+      setImages([]);
+      setImagesPreview([]);
     }
   };
 
@@ -60,11 +65,9 @@ const TweetBox = (props: TweetBoxProps) => {
     const newImagesPreview: string[] = newImages.map((i: File) => URL.createObjectURL(i));
     setImagesPreview(newImagesPreview);
   };
-  console.log(images);
-  console.log(imagesPreview);
     
   return (
-    <StyledTweetBoxContainer>
+    <StyledTweetBoxContainer ref={ref}>
       {mobile && (
         <StyledContainer
           flexDirection={"row"}
@@ -116,6 +119,6 @@ const TweetBox = (props: TweetBoxProps) => {
       </StyledContainer>
     </StyledTweetBoxContainer>
   );
-};
+});
 
 export default TweetBox;

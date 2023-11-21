@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useRef} from "react";
 import NavItem from "./navItem/NavItem";
 import Button from "../button/Button";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,14 +17,17 @@ import { StyledContainer } from "../common/Container";
 import { StyledIconContainer } from "./IconContainer";
 import { StyledNavItemsContainer } from "./navItem/NavItemsContainer";
 import { StyledP } from "../common/text";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 
 const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const ref = useRef(null)
   const user = useAppSelector((state) => state.user.user);
   const [tweetModalOpen, setTweetModalOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const { t } = useTranslation();
+  useOnClickOutside(ref, () => setTweetModalOpen(false))
   const handleAvatarClick = () => {
     if (window.innerWidth < 1265) {
       handleLogout();
@@ -83,6 +86,7 @@ const NavBar = () => {
           ></Button>
         </StyledContainer>
         <TweetModal
+          ref={ref}
           open={tweetModalOpen}
           onClose={() => {
             setTweetModalOpen(false);
