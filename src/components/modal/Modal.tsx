@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import ReactPortal from "../react-portal/ReactPortal"
 import { StyledBlurredBackground } from "../common/BlurredBackground";
 import Button from "../button/Button";
 import { ButtonType } from "../button/StyledButton";
@@ -26,6 +27,7 @@ const Modal = ({
   return (
     <>
       {show && (
+        <ReactPortal wrapperId="react-portal-modal-container">
         <StyledBlurredBackground>
           <StyledModalContainer>
             <StyledContainer alignItems={"center"} justifyContent={"center"}>
@@ -55,6 +57,7 @@ const Modal = ({
             </StyledContainer>
           </StyledModalContainer>
         </StyledBlurredBackground>
+        </ReactPortal>
       )}
     </>
   );
