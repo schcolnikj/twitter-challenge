@@ -13,7 +13,6 @@ const ButtonBase = styled.button`
   display: flex;
   align-items: center;
   gap: 16px;
-  align-self: stretch;
   border-radius: 40px;
   padding: 16px;
   border: none;
@@ -22,14 +21,18 @@ const ButtonBase = styled.button`
     background-color: ${(props) => props.theme.colors.hover};
     cursor: pointer;
   }
+  &:active {
+    background-color: ${(props) => props.theme.colors.active};
+  }
   p {
     font-size: 20px;
     font-family: "Manrope";
     line-height: 110%;
+    align-items: center;
     letter-spacing: -0.2px;
     text-transform: capitalize;
     margin: 0;
-  }
+   }
 
   .active {prop
     font-weight: 800;

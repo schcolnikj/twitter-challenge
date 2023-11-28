@@ -7,6 +7,7 @@ import { SearchBar } from "../../components/search-bar/SearchBar";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { StyledUserSuggestionContainer } from "./UserSeuggestionContainer";
+import { useSocket } from "../../hooks/useSocket";
 
 const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,8 @@ const HomePage = () => {
       navigate("/sign-in");
     }
   };
+
+  useSocket();
   
   useEffect(() => {
     handleSetUser().then();

@@ -27,6 +27,9 @@ export interface Post {
   author: Author;
   reactions: Reaction[];
   comments: Post[];
+  qtyComments: number;
+  qtyLikes: number;
+  qtyRetweets: number;
 }
 
 export interface Reaction {
@@ -46,13 +49,21 @@ export interface Author {
   private: boolean;
   createdAt: Date;
 }
+export interface Chat {
+  id: string;
+  user1Id: string;
+  user2Id: string;
+  user1: User;
+  user2: User;
+  messages: MessageDTO[]
+}
 
 export interface User {
   id: string;
   name?: string;
   username: string;
   profilePicture?: string;
-  private: boolean;
+  isPrivate: boolean;
   createdAt: Date;
   followers: Author[];
   following: Author[];
@@ -61,11 +72,11 @@ export interface User {
 
 export interface MessageDTO {
   id: string;
-  content: string;
+  body: string;
   createdAt: Date;
   chatId: string;
   senderId: string;
-  sender: Author;
+  chat: Chat;
 }
 
 export interface ChatDTO {

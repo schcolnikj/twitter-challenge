@@ -18,6 +18,9 @@ import { StyledIconContainer } from "./IconContainer";
 import { StyledNavItemsContainer } from "./navItem/NavItemsContainer";
 import { StyledP } from "../common/text";
 import { useOnClickOutside } from "../../hooks/useOnClickOutside";
+import { ConfigButton } from "../config-button/ConfigButton";
+// import { ConfigButton } from "../config-button/ConfigButton";
+// import MessageSearchBar from "../message-searchbar/MessageSearchBar";
 
 const NavBar = () => {
   const location = useLocation();
@@ -64,6 +67,15 @@ const NavBar = () => {
             icon={IconType.PROFILE}
             selectedIcon={IconType.ACTIVE_PROFILE}
             active={location.pathname === `/profile/${user.id}`}
+          />
+          <NavItem
+            title={t("navbar.message")}
+            onClick={() => {
+              navigate("/messages");
+            }}
+            icon={IconType.MESSAGE}
+            selectedIcon={IconType.ACTIVE_MESSAGE}
+            active={location.pathname === "/messages/"}
           />
           <StyledTweetButton
             onClick={() =>

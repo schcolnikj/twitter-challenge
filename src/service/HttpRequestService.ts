@@ -200,7 +200,7 @@ const httpRequestService = {
   },
 
   getChats: async () => {
-    const res = await axios.get(`${url}/chat`);
+    const res = await axios.get(`${url}/message`);
 
     if (res.status === 200) {
       return res.data;
@@ -217,7 +217,7 @@ const httpRequestService = {
 
   createChat: async (id: string) => {
     const res = await axios.post(
-      `${url}/chat`,
+      `${url}/message`,
       {
         users: [id],
       });
@@ -228,7 +228,7 @@ const httpRequestService = {
   },
 
   getChat: async (id: string) => {
-    const res = await axios.get(`${url}/chat/${id}`);
+    const res = await axios.get(`${url}/message/${id}`);
 
     if (res.status === 200) {
       return res.data;

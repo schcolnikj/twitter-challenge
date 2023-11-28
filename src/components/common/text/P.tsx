@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { Theme } from "../../../util/LightTheme";
 
+
 interface PProps {
   primary: boolean;
   theme: Theme;
-}
+} 
 
 export const StyledP = styled.p`
   color: ${(props: PProps) =>
